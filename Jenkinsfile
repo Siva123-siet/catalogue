@@ -14,13 +14,9 @@ pipeline {
         timeout(time: 30, unit: 'MINUTES') 
         disableConcurrentBuilds() 
     }
-    // parameters {
-    //     string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
-    //     text(name: 'BIOGRAPHY', defaultValue: '', description: 'Enter some information about the person')
-    //     booleanParam(name: 'TOGGLE', defaultValue: true, description: 'Toggle this value')
-    //     choice(name: 'CHOICE', choices: ['One', 'Two', 'Three'], description: 'Pick something')
-    //     password(name: 'PASSWORD', defaultValue: 'SECRET', description: 'Enter a password')
-    // }
+    parameters {
+        booleanParam(name: 'deploy', defaultValue: false, description: 'Toggle this value')
+    }
     // Build 
     stages {
         stage('Read package.json') {
@@ -43,6 +39,15 @@ pipeline {
                 }
             }
         }
+        stage('Unit Testing') {
+            steps {
+                script {
+                    sh """
+                        echo "unit tests"
+                    """
+                }
+            }
+        }
         stage('Docker Build') {
             steps {
                 script {
@@ -54,6 +59,22 @@ pipeline {
                   docker push ${ACC_ID}.dkr.ecr.us-east-1.amazonaws.com/${PROJECT}/${COMPONENT}:${appVersion}
                 """
                 }
+                }
+            }
+        }
+        stage('Trigger deploy') {
+            when {
+                    expression { params.deploy }
+                }
+            steps {
+                script {
+                    build job: 'catalogue-cd',
+                    parameters {
+                     string(name: 'appVersion', value: "${appVersion}")
+                     string(name: 'deploy_to', value: "dev")
+                    }
+                    propogate: false, //even sg fails vpc will not be effected
+                    wait: false // vpc will not wait for sg pipeline completion
                 }
             }
         }
