@@ -71,7 +71,7 @@ pipeline {
                     build job: 'catalogue-cd',
                     parameters [
                      string(name: 'appVersion', value: "${appVersion}")
-                     string(name: 'deploy_to', value: "dev")
+                     string(name: 'deploy_to', value: 'dev')
                     ],
                     propogate: false, //even sg fails vpc will not be effected
                     wait: false // vpc will not wait for sg pipeline completion
