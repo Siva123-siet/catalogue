@@ -55,7 +55,7 @@ pipeline {
             steps {
              // Sonar Server environment
              withSonarQubeEnv('sonar-7.2') { // ID from System configuration
-             sh "${scannerHome}/bin/sonar-scanner" 
+             sh "${scannerHome}/bin/sonar-scanner" // This command will run sonarqube scanner based on sonar-project.properties instaructions and give results to sonarqube server
            }
           }
         }
