@@ -50,7 +50,7 @@ pipeline {
         }
         stage('Sonar Scan') {
             environment {
-            scannerHome = tool 'sonar-8.1'
+            scannerHome = tool 'sonar-8.0.1'
             }
             steps {
              // Sonar Server environment
