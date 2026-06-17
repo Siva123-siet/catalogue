@@ -50,11 +50,11 @@ pipeline {
         }
         stage('Sonar Scan') {
             environment {
-            scannerHome = tool 'sonar-8.0.1'
+            scannerHome = tool 'sonar-7.2'
             }
             steps {
              // Sonar Server environment
-             withSonarQubeEnv('sonar-8.0.1') { // ID from System configuration
+             withSonarQubeEnv('sonar-7.2') { // ID from System configuration
              sh "${scannerHome}/bin/sonar-scanner" // This command will run sonarqube scanner based on sonar-project.properties instaructions and give results to sonarqube server
            }
           }
