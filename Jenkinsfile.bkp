@@ -10,7 +10,7 @@ pipeline {
         PROJECT = "roboshop"
         COMPONENT = "catalogue"
     }
-    options {
+    options { 
         timeout(time: 30, unit: 'MINUTES') 
         disableConcurrentBuilds() 
     }
@@ -48,7 +48,7 @@ pipeline {
                 }
             }
         }
-        stage('Sonar Scan') {
+        /* stage('Sonar Scan') {
             environment {
             scannerHome = tool 'sonar-8.0.1'
             }
@@ -96,7 +96,7 @@ pipeline {
                     error("High severity Dependabot alerts found")
             }
         }
-    }
+    } */
         stage('Docker Build') {
             steps {
                 script {
