@@ -83,21 +83,17 @@ pipeline {
                     returnStdout: true
                 ).trim()
 
-                // Parse JSON
-                def json = readJSON text: response
+                      def alerts = readJSON text: response
 
-                // Filter alerts by severity
-                def criticalOrHigh = json.findAll { alert ->
-                    def severity = alert?.security_advisory?.severity?.toLowerCase()
-                    def state = alert?.state?.toLowerCase()
-                    return (state == "open" && (severity == "critical" || severity == "high"))
+                def highAlerts = alerts.findAll {
+                    it.state == 'open' &&
+                    it.security_advisory?.severity == 'high'
                 }
 
-                if (criticalOrHigh.size() > 0) {
-                    error "❌ Found ${criticalOrHigh.size()} HIGH/CRITICAL Dependabot alerts. Failing pipeline!"
-                } else {
-                    echo "✅ No HIGH/CRITICAL Dependabot alerts found."
-                }
+                echo "Open high severity alerts: ${highAlerts.size()}"
+
+                if (highAlerts.size() > 0) {
+                    error("High severity Dependabot alerts found")
             }
         }
     }
